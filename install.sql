@@ -1,0 +1,11 @@
+CREATE DATABASE IF NOT EXISTS stylesheet_db; USE stylesheet_db;
+CREATE TABLE IF NOT EXISTS users (id INT AUTO_INCREMENT PRIMARY KEY,full_name VARCHAR(100),email VARCHAR(120) UNIQUE,password VARCHAR(255),phone VARCHAR(20),address TEXT,created_at DATETIME);
+CREATE TABLE IF NOT EXISTS admin (id INT AUTO_INCREMENT PRIMARY KEY,username VARCHAR(80) UNIQUE,password VARCHAR(255));
+CREATE TABLE IF NOT EXISTS categories (id INT AUTO_INCREMENT PRIMARY KEY,name VARCHAR(80),icon VARCHAR(80),status TINYINT DEFAULT 1);
+CREATE TABLE IF NOT EXISTS products (id INT AUTO_INCREMENT PRIMARY KEY,category_id INT,name VARCHAR(150),description TEXT,price DECIMAL(10,2),old_price DECIMAL(10,2),stock INT,image_url VARCHAR(255),FOREIGN KEY (category_id) REFERENCES categories(id));
+CREATE TABLE IF NOT EXISTS cart (id INT AUTO_INCREMENT PRIMARY KEY,user_id INT,product_id INT,quantity INT DEFAULT 1,FOREIGN KEY (user_id) REFERENCES users(id),FOREIGN KEY (product_id) REFERENCES products(id));
+CREATE TABLE IF NOT EXISTS orders (id INT AUTO_INCREMENT PRIMARY KEY,user_id INT,total_price DECIMAL(10,2),payment_status VARCHAR(30),order_status VARCHAR(40),tracking_id VARCHAR(60),created_at DATETIME,FOREIGN KEY (user_id) REFERENCES users(id));
+CREATE TABLE IF NOT EXISTS order_items (id INT AUTO_INCREMENT PRIMARY KEY,order_id INT,product_id INT,quantity INT,price DECIMAL(10,2),FOREIGN KEY (order_id) REFERENCES orders(id),FOREIGN KEY (product_id) REFERENCES products(id));
+CREATE TABLE IF NOT EXISTS bot_logs (id INT AUTO_INCREMENT PRIMARY KEY,platform VARCHAR(20),message_type VARCHAR(40),status VARCHAR(20),timestamp DATETIME DEFAULT CURRENT_TIMESTAMP);
+INSERT INTO admin(username,password) VALUES('admin', '$2y$10$3fl92qjv/TSV3do6ibydRud66fY7mleM3q6Xn8l6uGx9M3mGd2WCO') ON DUPLICATE KEY UPDATE username=username;
+INSERT INTO categories(name,icon,status) VALUES ('Electronics','fa-mobile',1),('Fashion','fa-shirt',1),('Home','fa-house',1) ON DUPLICATE KEY UPDATE name=name;

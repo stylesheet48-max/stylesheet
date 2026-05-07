@@ -1,0 +1,4 @@
+<?php require_once __DIR__.'/../config.php'; if(!isset($_SESSION['user_id'])){header('Location:/user/login.php');exit;} include __DIR__.'/../header.php';
+$st=$pdo->prepare('SELECT * FROM orders WHERE user_id=? ORDER BY id DESC');$st->execute([$_SESSION['user_id']]);$orders=$st->fetchAll();$map=['Ordered'=>25,'Shipped'=>50,'Out for Delivery'=>75,'Delivered'=>100]; ?>
+<main class="max-w-3xl mx-auto p-4"><h1 class="text-xl font-bold mb-3">My Orders</h1><?php foreach($orders as $o): $pct=$map[$o['order_status']]??10; ?><div class="bg-white p-3 rounded-lg mb-3"><div>#<?=$o['tracking_id']?> - <?=$o['order_status']?></div><div class="w-full bg-slate-200 h-2 rounded mt-2"><div class="bg-indigo-600 h-2 rounded" style="width: <?=$pct?>%"></div></div></div><?php endforeach; ?></main>
+<?php include __DIR__.'/../bottom.php'; ?>
